@@ -12,7 +12,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 @SpringBootTest
@@ -78,4 +80,32 @@ public class GuestbookRepositoryTests {
             System.out.println(guestbook);
         });
     }
+
+    @Test
+    public void testQuery3() {
+        AtomicInteger count = new AtomicInteger();
+        Pageable pageable = PageRequest.of(0, 50, Sort.by("gno").ascending());
+        QGuestbook qGuestbook = QGuestbook.guestbook;
+        String titlekeyword = "Title";
+        String contentkeyword = "...";
+        String userkeyword = "user1";
+        BooleanBuilder builder = new BooleanBuilder();
+        BooleanExpression exTitle = qGuestbook.title.contains(titlekeyword);
+        BooleanExpression exContent = qGuestbook.content.contains(contentkeyword);
+        BooleanExpression exUser = qGuestbook.writer.eq(userkeyword);
+        BooleanExpression exAll1 = exTitle.and(exContent);
+        BooleanExpression exAll2 = exAll1.and(exUser);    // 1..........
+        builder.and(exAll2); // 2...............
+
+        Page<Guestbook> result = guestbookRepository.findAll(builder, pageable);
+
+        result.stream().forEach(guestbook -> {
+
+            System.out.println(guestbook);
+            count.getAndIncrement();
+        });
+        System.out.println(count.get());
+    }
+
+
 }
