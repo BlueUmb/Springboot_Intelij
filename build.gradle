@@ -23,7 +23,8 @@ repositories {
 }
 
 dependencies {
-	developmentOnly("org.springframework.boot:spring-boot-devtools")
+	testImplementation 'junit:junit:4.13.1'
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
 	// mysql
 	//implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.32'
 	implementation 'mysql:mysql-connector-java:8.0.32'
