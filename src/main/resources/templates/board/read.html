@@ -246,16 +246,7 @@
                         }
                     });
                 });
-                $(".close").click(function () {
-
-                    modal.modal('hide');
-
-                    //댓글 입력하는 부분 초기화 시키기
-                    $('input[name="replyText"]').val('');
-                    $('input[name="replyer"]').val('');
-                });
-
-                $(".replyClose").click(function () {
+                $(".close, .replyClose").click(function () {
 
                     modal.modal('hide');
 
