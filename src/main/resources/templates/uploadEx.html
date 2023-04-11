@@ -5,12 +5,23 @@
     <title>Title</title>
 </head>
 <body>
+    <input name="uploadFiles" type="file" multiple>
+    <button class="uploadBtn">Upload</button>
 
-<input name="uploadFiles" type="file" multiple>
-<button class="uploadBtn">Upload</button>
+    <div class="uploadResult"></div>
 
-<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
-<script>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <script>
+        function showUploadedImages(arr){
+            console.log(arr);
+
+            var divArea = $(".uploadResult");
+
+            for(var i = 0; i < arr.length; i++){
+                divArea.append("<img src='display?fileName=" + arr[i].thumbnailURL + "'>"); // thumbnailURL로 변경
+            }
+        }
+
         $('.uploadBtn').click(function(){
            var formData = new FormData();
            var inputFile = $("input[type='file']");
@@ -33,11 +44,28 @@
                 success: function(result){
                     console.log(result);
                     // 나중에 화면 처리
+                    showUploadedImages(result);
                 },
                 error: function(jqXHR, textStatus, errorThrown){
                     console.log(textStatus);
                 }
            }); // $.ajax
+        });
+
+        $(".uploadResult").on("click", ".removeBtn", function(e){
+
+            var target = $(this);
+            var fileName = target.data("name");
+            var targetDiv = $(this).closest("div");
+
+            console.log(fileName);
+
+            $.post('/removeFile', {fileName : fileName}, function(result){
+                console.log(result);
+                if(result === true){
+                    targetDiv.remove();
+                }
+            });
         });
     </script>
 </body>
